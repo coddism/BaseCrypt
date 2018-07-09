@@ -1,6 +1,7 @@
 <?php
 
-namespace Coddism\BaseCrypt;
+namespace Coddism\BaseCrypt\Examples;
+use Coddism\BaseCrypt\BaseCrypt64;
 
 class DigitCrypt64 extends BaseCrypt64
 {
