@@ -1,6 +1,6 @@
 <?php
 
-namespace Coddism;
+namespace Coddism\BaseCrypt;
 
 class BaseCrypt
 {

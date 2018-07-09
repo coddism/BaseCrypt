@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: isergium
- * Date: 06.07.18
- * Time: 17:06
- */
 
-namespace Coddism\Crypt;
+namespace Coddism\BaseCrypt;
 
-class CharsCrypt64 extends \Coddism\BaseCrypt64
+class CharsCrypt64 extends BaseCrypt64
 {
     static protected $importCodes = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
