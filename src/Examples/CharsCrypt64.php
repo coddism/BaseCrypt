@@ -11,5 +11,4 @@ class CharsCrypt64 extends BaseCrypt64
         'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
         'U', 'V', 'W', 'X', 'Y', 'Z', ' '
     ];
-    static protected $inBits = 5;
 }

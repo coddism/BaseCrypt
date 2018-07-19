@@ -5,12 +5,22 @@ namespace Coddism\BaseCrypt;
 class BaseCrypt
 {
     static protected $importCodes;
-    static protected $inBits;
-
     static protected $exportCodes;
-    static protected $outBits;
-
     static protected $specialCodes = ['#','&','%'];
+
+    static private function inBits() {
+        if (!static::$importCodes) {
+            throw new \LogicException('Class must have a $importCodes');
+        }
+        return intval(ceil(log(sizeof(static::$importCodes), 2)));
+    }
+
+    static private function outBits() {
+        if (!static::$exportCodes) {
+            throw new \LogicException('Class must have a $exportCodes');
+        }
+        return intval(ceil(log(sizeof(static::$exportCodes), 2)));
+    }
 
     static public function encode($string) {
         if (!static::$importCodes) {
@@ -27,7 +37,7 @@ class BaseCrypt
             if ($index === false) {
                 throw new \Exception("This character is not supported: $symbol");
             }
-            $hStr .= str_pad(decbin($index), static::$inBits, '0', STR_PAD_LEFT);
+            $hStr .= str_pad(decbin($index), static::inBits(), '0', STR_PAD_LEFT);
         }
 
         $shift = substr_count($hStr, '1');
@@ -37,13 +47,13 @@ class BaseCrypt
         }
 
         $res = '';
-        foreach (str_split($hStr, static::$outBits) as $subStr) {
-            $subStr = str_pad($subStr, static::$outBits, '0');
+        foreach (str_split($hStr, static::outBits()) as $subStr) {
+            $subStr = str_pad($subStr, static::outBits(), '0');
             $res .= static::$exportCodes[bindec($subStr)];
         }
 
-        if (strlen($hStr) % static::$outBits) {
-            $needSpecialSymbols = ((((strlen($hStr)/static::$outBits|0)+1)*static::$outBits - strlen($hStr)) / static::$inBits)|0;
+        if (strlen($hStr) % static::outBits()) {
+            $needSpecialSymbols = ((((strlen($hStr)/static::outBits()|0)+1)*static::outBits() - strlen($hStr)) / static::inBits())|0;
             if ($needSpecialSymbols >= 1) {
                 for ($i = 0; $i < $needSpecialSymbols; $i++) {
                     $pos = rand(0, strlen($res));
@@ -75,15 +85,15 @@ class BaseCrypt
             if ($index === false) {
                 throw new \Exception("This character is not supported: $symbol");
             }
-            $hStr .= str_pad(decbin($index), static::$outBits, '0', STR_PAD_LEFT);
+            $hStr .= str_pad(decbin($index), static::outBits(), '0', STR_PAD_LEFT);
         }
 
-        if ($zerosCount = (strlen($hStr) % static::$inBits)) {
+        if ($zerosCount = (strlen($hStr) % static::inBits())) {
             $hStr = substr($hStr, 0, -$zerosCount);
         }
 
         if ($skipBlocks) {
-            $hStr = substr($hStr, 0, - $skipBlocks*static::$inBits);
+            $hStr = substr($hStr, 0, - $skipBlocks*static::inBits());
         }
 
         $shift = substr_count($hStr, '1');
@@ -92,7 +102,7 @@ class BaseCrypt
         }
 
         $res = '';
-        foreach (str_split($hStr, static::$inBits) as $subStr) {
+        foreach (str_split($hStr, static::inBits()) as $subStr) {
             $res .= static::$importCodes[bindec($subStr)];
         }
 

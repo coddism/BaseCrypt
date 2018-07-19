@@ -1,10 +1,6 @@
 var BaseCrypt = {
     importCodes: [],
-    inBits: 0,
-
     exportCodes: [],
-    outBits : 0,
-
     specialCodes: ['#','&','%'],
 
     substr_count: function (string, symbol) {
@@ -19,6 +15,19 @@ var BaseCrypt = {
     },
     random: function(max) {
         return Math.floor(Math.random() * max);
+    },
+
+    inBits: function() {
+        if (!this.importCodes) {
+            throw 'Class must have a importCodes';
+        }
+        return Math.ceil(Math.log2(this.importCodes.length));
+    },
+    outBits: function() {
+        if (!this.exportCodes) {
+            throw 'Class must have a exportCodes';
+        }
+        return Math.ceil(Math.log2(this.exportCodes.length));
     },
 
     encode: function (string) {
@@ -37,7 +46,7 @@ var BaseCrypt = {
             if (index < 0) {
                 throw "This character is not supported: " + symbol;
             }
-            hStr += index.toString(2).padStart(this.inBits, '0');
+            hStr += index.toString(2).padStart(this.inBits(), '0');
         }
 
         var shift = this.substr_count(hStr, '1');
@@ -49,14 +58,14 @@ var BaseCrypt = {
             pos = 0,
             subStr;
 
-        while (subStr = hStr.substr(pos, this.outBits)) {
-            subStr = subStr.padEnd(this.outBits, '0');
-            pos += this.outBits;
+        while (subStr = hStr.substr(pos, this.outBits())) {
+            subStr = subStr.padEnd(this.outBits(), '0');
+            pos += this.outBits();
             res += this.exportCodes[parseInt(subStr, 2)];
         }
 
-        if (hStr.length % this.outBits) {
-            var needSpecialSymbols = ((((hStr.length/this.outBits|0)+1)*this.outBits - hStr.length) / this.inBits)|0;
+        if (hStr.length % this.outBits()) {
+            var needSpecialSymbols = ((((hStr.length/this.outBits()|0)+1)*this.outBits() - hStr.length) / this.inBits())|0;
             if (needSpecialSymbols >= 1) {
                 for (i = 0; i < needSpecialSymbols; i++) {
                     pos = this.random(res.length + 1);
@@ -92,15 +101,15 @@ var BaseCrypt = {
                 throw "This character is not supported: " + symbol;
             }
 
-            hStr += index.toString(2).padStart(this.outBits, '0');
+            hStr += index.toString(2).padStart(this.outBits(), '0');
         }
 
-        if (zerosCount =  hStr.length % this.inBits) {
+        if (zerosCount =  hStr.length % this.inBits()) {
             hStr = hStr.substr(0, hStr.length - zerosCount)
         }
 
         if (skipBlocks) {
-            hStr = hStr.substr(0, hStr.length - skipBlocks*this.inBits)
+            hStr = hStr.substr(0, hStr.length - skipBlocks*this.inBits())
         }
 
         var shift = this.substr_count(hStr, '1');
@@ -112,9 +121,8 @@ var BaseCrypt = {
             pos = 0,
             subStr;
 
-        while (subStr = hStr.substr(pos, this.inBits)) {
-            pos+=this.inBits;
-            //console.log('--',  this.importCodes[parseInt(subStr, 2)], subStr );
+        while (subStr = hStr.substr(pos, this.inBits())) {
+            pos += this.inBits();
             res += this.importCodes[parseInt(subStr, 2)];
         }
 
