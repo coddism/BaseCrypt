@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<script src="../src/BaseCrypt.js"></script>
+<script>
+    BaseCrypt.importCodes = [
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    ];
+    BaseCrypt.inBits = 4;
+    BaseCrypt.exportCodes = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+        'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
+        'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+        'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', '!', '-'
+    ];
+    BaseCrypt.outBits = 6;
+
+    var input = BaseCrypt.random(100000000) + '';
+    console.log('>>', input);
+    console.log('<<', encoded = BaseCrypt.encode(input));
+    console.log('<<', decoded = BaseCrypt.decode(encoded));
+    console.log(decoded == input ? '+' : '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
+    BaseCrypt.importCodes = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z', ' '
+    ];
+
+    BaseCrypt.inBits = 5;
+    input = 'DETHKLOK';
+    console.log('>>', input);
+    console.log('<<', decoded = BaseCrypt.encode(input));
+    console.log('<<', BaseCrypt.decode(decoded));
+</script>
+</body>
+</html>
