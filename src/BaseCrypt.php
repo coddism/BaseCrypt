@@ -7,6 +7,7 @@ class BaseCrypt
     static protected $importCodes;
     static protected $exportCodes;
     static protected $specialCodes = ['#','&','%'];
+    static protected $trashCodes = [];
 
     static private function inBits() {
         if (!static::$importCodes) {
@@ -62,6 +63,16 @@ class BaseCrypt
             }
         }
 
+        if (static::$trashCodes) {
+            $trashCount = round( (strlen($hStr) - $shift) / static::outBits() );
+            if ($trashCount >= 1) {
+                for ($i = 0; $i < $trashCount; $i++) {
+                    $pos = rand(0, strlen($res));
+                    $res = substr_replace($res, static::$trashCodes[array_rand(static::$trashCodes)], $pos, 0);
+                }
+            }
+        }
+
         return $res;
     }
 
@@ -77,11 +88,14 @@ class BaseCrypt
         $hStr = '';
         $skipBlocks = 0;
         foreach (str_split($string) as $symbol) {
-            $index = array_search($symbol, static::$exportCodes);
             if (array_search($symbol, static::$specialCodes) !== false) {
                 $skipBlocks++;
                 continue;
             }
+            if (array_search($symbol, static::$trashCodes) !== false) {
+                continue;
+            }
+            $index = array_search($symbol, static::$exportCodes);
             if ($index === false) {
                 throw new \Exception("This character is not supported: $symbol");
             }

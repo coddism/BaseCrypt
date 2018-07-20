@@ -2,6 +2,7 @@ var BaseCrypt = {
     importCodes: [],
     exportCodes: [],
     specialCodes: ['#','&','%'],
+    trashCodes: [],
 
     substr_count: function (string, symbol) {
         var c = 0;
@@ -74,6 +75,16 @@ var BaseCrypt = {
             }
         }
 
+        if (this.trashCodes.length) {
+            var trashCount = Math.round( (hStr.length - shift) / this.outBits() );
+            if (trashCount >= 1) {
+                for (i = 0; i < trashCount; i++) {
+                    pos = this.random(res.length + 1);
+                    res = res.slice(0, pos) + this.trashCodes[this.random(this.trashCodes.length)] + res.slice(pos);
+                }
+            }
+        }
+
         return res;
     },
 
@@ -95,6 +106,9 @@ var BaseCrypt = {
                 index = this.exportCodes.indexOf(symbol);
             if (this.specialCodes.indexOf(symbol) > -1) {
                 skipBlocks++;
+                continue;
+            }
+            if (this.trashCodes.indexOf(symbol) > -1) {
                 continue;
             }
             if (index < 0) {
