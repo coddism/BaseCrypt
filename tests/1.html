@@ -8,18 +8,11 @@
 <script src="../src/BaseCrypt.js"></script>
 <script>
     var DigitCrypt = Object.assign({}, BaseCrypt);
-    DigitCrypt.importCodes = [
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-    ];
-    DigitCrypt.exportCodes = [
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
-        'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-        'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', '!', '-'
-    ];
+    DigitCrypt.importCodes = '0123456789';
+    DigitCrypt.exportCodes =
+            'abcdefghijklmnopqrstuvwxyz' +
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+            '0123456789!-';
 
     var input = BaseCrypt.random(100000000) + '';
     console.log('>>', input);
@@ -28,12 +21,8 @@
     console.log(decoded == input ? '+' : '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     var CharsCrypt = Object.assign({}, DigitCrypt);
-    CharsCrypt.importCodes = [
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-        'U', 'V', 'W', 'X', 'Y', 'Z', ' '
-    ];
-    CharsCrypt.trashCodes = ['"','>','.',',','<','+'];
+    CharsCrypt.importCodes = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+    //CharsCrypt.trashCodes = '">.,+';
 
     input = 'DETHKLOK';
     console.log('>>', input);

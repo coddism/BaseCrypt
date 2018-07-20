@@ -1,8 +1,8 @@
 var BaseCrypt = {
-    importCodes: [],
-    exportCodes: [],
-    specialCodes: ['#','&','%'],
-    trashCodes: [],
+    importCodes: '',
+    exportCodes: '',
+    specialCodes: '#&%',
+    trashCodes: '',
 
     substr_count: function (string, symbol) {
         var c = 0;
@@ -17,24 +17,26 @@ var BaseCrypt = {
     random: function(max) {
         return Math.floor(Math.random() * max);
     },
-
-    inBits: function() {
+    checkErrors: function () {
         if (!this.importCodes) {
             throw 'Class must have a importCodes';
         }
-        return Math.ceil(Math.log2(this.importCodes.length));
-    },
-    outBits: function() {
         if (!this.exportCodes) {
             throw 'Class must have a exportCodes';
         }
+    },
+
+    inBits: function() {
+        this.checkErrors();
+        return Math.ceil(Math.log2(this.importCodes.length));
+    },
+    outBits: function() {
+        this.checkErrors();
         return Math.ceil(Math.log2(this.exportCodes.length));
     },
 
     encode: function (string) {
-        if (!this.importCodes) {
-            throw 'Class must have a importCodes';
-        }
+        this.checkErrors();
         if (typeof(string) != 'string') {
             throw 'It is not a string!';
         }
@@ -89,10 +91,7 @@ var BaseCrypt = {
     },
 
     decode: function(string) {
-
-        if (!this.importCodes) {
-            throw 'Class must have a importCodes';
-        }
+        this.checkErrors();
         if (typeof(string) != 'string') {
             throw 'It is not a string!';
         }

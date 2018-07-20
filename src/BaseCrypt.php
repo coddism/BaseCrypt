@@ -6,27 +6,32 @@ class BaseCrypt
 {
     static protected $importCodes;
     static protected $exportCodes;
-    static protected $specialCodes = ['#','&','%'];
-    static protected $trashCodes = [];
+    static protected $specialCodes = '#&%';
+    static protected $trashCodes = '';
 
-    static private function inBits() {
+    static private final function checkErrors() {
         if (!static::$importCodes) {
             throw new \LogicException('Class must have a $importCodes');
         }
-        return intval(ceil(log(sizeof(static::$importCodes), 2)));
-    }
-
-    static private function outBits() {
         if (!static::$exportCodes) {
             throw new \LogicException('Class must have a $exportCodes');
         }
-        return intval(ceil(log(sizeof(static::$exportCodes), 2)));
+    }
+    static private final function randomCharFromString($string) {
+        return $string[rand(0, strlen($string)-1)];
+    }
+
+    static private function inBits() {
+        self::checkErrors();
+        return intval(ceil(log(strlen(static::$importCodes), 2)));
+    }
+    static private function outBits() {
+        self::checkErrors();
+        return intval(ceil(log(strlen(static::$exportCodes), 2)));
     }
 
     static public function encode($string) {
-        if (!static::$importCodes) {
-            throw new \LogicException('Class must have a $importCodes');
-        }
+        self::checkErrors();
         if (!is_string($string)) {
             throw new \Exception('It is not a string!');
         }
@@ -34,7 +39,7 @@ class BaseCrypt
 
         $hStr = '';
         foreach (str_split($string) as $symbol) {
-            $index = array_search($symbol, static::$importCodes);
+            $index = strpos(static::$importCodes, $symbol);
             if ($index === false) {
                 throw new \Exception("This character is not supported: $symbol");
             }
@@ -42,7 +47,6 @@ class BaseCrypt
         }
 
         $shift = substr_count($hStr, '1');
-
         if ($shift) {
             $hStr = (substr($hStr, -$shift) . substr($hStr, 0, -$shift));
         }
@@ -58,7 +62,7 @@ class BaseCrypt
             if ($needSpecialSymbols >= 1) {
                 for ($i = 0; $i < $needSpecialSymbols; $i++) {
                     $pos = rand(0, strlen($res));
-                    $res = substr_replace($res, self::$specialCodes[array_rand(self::$specialCodes)], $pos, 0);
+                    $res = substr_replace($res, self::randomCharFromString(static::$specialCodes), $pos, 0);
                 }
             }
         }
@@ -68,7 +72,7 @@ class BaseCrypt
             if ($trashCount >= 1) {
                 for ($i = 0; $i < $trashCount; $i++) {
                     $pos = rand(0, strlen($res));
-                    $res = substr_replace($res, static::$trashCodes[array_rand(static::$trashCodes)], $pos, 0);
+                    $res = substr_replace($res, self::randomCharFromString(static::$trashCodes), $pos, 0);
                 }
             }
         }
@@ -77,9 +81,7 @@ class BaseCrypt
     }
 
     static public function decode($string) {
-        if (!static::$importCodes) {
-            throw new \LogicException('Class must have a $importCodes');
-        }
+        self::checkErrors();
         if (!is_string($string)) {
             throw new \Exception('It is not a string!');
         }
@@ -88,14 +90,14 @@ class BaseCrypt
         $hStr = '';
         $skipBlocks = 0;
         foreach (str_split($string) as $symbol) {
-            if (array_search($symbol, static::$specialCodes) !== false) {
+            if (strpos(static::$specialCodes, $symbol) !== false) {
                 $skipBlocks++;
                 continue;
             }
-            if (array_search($symbol, static::$trashCodes) !== false) {
+            if (strpos(static::$trashCodes, $symbol) !== false) {
                 continue;
             }
-            $index = array_search($symbol, static::$exportCodes);
+            $index = strpos(static::$exportCodes, $symbol);
             if ($index === false) {
                 throw new \Exception("This character is not supported: $symbol");
             }
@@ -112,7 +114,7 @@ class BaseCrypt
 
         $shift = substr_count($hStr, '1');
         if ($shift) {
-            $hStr = (substr($hStr, $shift) . substr($hStr, 0, $shift));
+            $hStr = substr($hStr, $shift) . substr($hStr, 0, $shift);
         }
 
         $res = '';
