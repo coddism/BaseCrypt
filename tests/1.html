@@ -7,10 +7,11 @@
 <body>
 <script src="../src/BaseCrypt.js"></script>
 <script>
-    BaseCrypt.importCodes = [
+    var DigitCrypt = Object.assign({}, BaseCrypt);
+    DigitCrypt.importCodes = [
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
-    BaseCrypt.exportCodes = [
+    DigitCrypt.exportCodes = [
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
         'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
         'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
@@ -22,21 +23,22 @@
 
     var input = BaseCrypt.random(100000000) + '';
     console.log('>>', input);
-    console.log('<<', encoded = BaseCrypt.encode(input));
-    console.log('<<', decoded = BaseCrypt.decode(encoded));
+    console.log('<<', encoded = DigitCrypt.encode(input));
+    console.log('<<', decoded = DigitCrypt.decode(encoded));
     console.log(decoded == input ? '+' : '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
-    BaseCrypt.importCodes = [
+    var CharsCrypt = Object.assign({}, DigitCrypt);
+    CharsCrypt.importCodes = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
         'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
         'U', 'V', 'W', 'X', 'Y', 'Z', ' '
     ];
-    BaseCrypt.trashCodes = ['"','>','.',',','<','+'];
+    CharsCrypt.trashCodes = ['"','>','.',',','<','+'];
 
     input = 'DETHKLOK';
     console.log('>>', input);
-    console.log('<<', decoded = BaseCrypt.encode(input));
-    console.log('<<', BaseCrypt.decode(decoded));
+    console.log('<<', decoded = CharsCrypt.encode(input));
+    console.log('<<', CharsCrypt.decode(decoded));
 </script>
 </body>
 </html>

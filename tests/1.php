@@ -6,6 +6,9 @@ include "../src/Examples/DigitCrypt64.php";
 include "../src/Examples/DigitCrypt64Trash.php";
 include "../src/Examples/CharsCrypt64.php";
 
+/*echo ($decoded = \Coddism\BaseCrypt\Examples\DigitCrypt64::decode("n4%msiG")) . PHP_EOL;
+die();*/
+
 //echo ($in = "51375344").PHP_EOL;
 echo ($in = rand(0, 10000000).'').PHP_EOL;
 echo ($encoded = \Coddism\BaseCrypt\Examples\DigitCrypt64::encode($in)) . PHP_EOL;
