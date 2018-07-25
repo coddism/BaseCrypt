@@ -142,3 +142,4 @@ var BaseCrypt = {
         return res;
     }
 };
+module.exports = BaseCrypt;
